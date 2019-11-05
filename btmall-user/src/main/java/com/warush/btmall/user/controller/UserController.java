@@ -22,7 +22,6 @@ public class UserController {
     @Autowired
     UserService userService;
 
-
     @RequestMapping("getMemberById")
     @ResponseBody
     public UmsMember getMemberById(String id) {

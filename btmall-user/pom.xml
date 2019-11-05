@@ -21,37 +21,38 @@
     </properties>
 
     <dependencies>
+        <!--    由于 service-util 经依赖了 common-util，
+                因此这里直接依赖service-util即可-->
+        <!--&lt;!&ndash;        依赖 common-util工程&ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.warush.btmall</groupId>-->
+        <!--            <artifactId>btmall-common-util</artifactId>-->
+        <!--            <version>1.0-SNAPSHOT</version>-->
+        <!--        </dependency>-->
 
+        <!--        依赖service-util-->
+        <dependency>
+            <groupId>com.warush.btmall</groupId>
+            <artifactId>btmall-service-util</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!--        如果 service和Controller没有分开，
+                    那么这里还要引入Controller对web-util的依赖-->
+        <dependency>
+            <groupId>com.warush.btmall</groupId>
+            <artifactId>btmall-web-util</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!--        依赖btmall-api工程-->
         <dependency>
             <groupId>com.warush.btmall</groupId>
             <artifactId>btmall-api</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
