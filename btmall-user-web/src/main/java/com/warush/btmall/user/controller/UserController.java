@@ -45,6 +45,7 @@ public class UserController {
 
     @GetMapping("index")
     public String index() {
-        return " hello user !";
+
+        return "welcome to btMall";
     }
 }
