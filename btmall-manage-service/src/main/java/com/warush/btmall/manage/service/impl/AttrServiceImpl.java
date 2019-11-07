@@ -4,10 +4,15 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.warush.btmall.beans.PmsBaseAttrInfo;
 import com.warush.btmall.beans.PmsBaseAttrValue;
 import com.warush.btmall.beans.PmsBaseSaleAttr;
+import com.warush.btmall.beans.PmsProductSaleAttr;
 import com.warush.btmall.manage.mapper.PmsBaseAttrInfoMapper;
 import com.warush.btmall.manage.mapper.PmsBaseAttrValueMapper;
+import com.warush.btmall.manage.mapper.PmsBaseSaleAttrMapper;
+import com.warush.btmall.manage.mapper.PmsProductSaleAttrMapper;
 import com.warush.btmall.service.AttrService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -24,23 +29,11 @@ public class AttrServiceImpl implements AttrService {
     @Autowired
     PmsBaseAttrValueMapper valueMapper;
 
-    @Override
-    public List<PmsBaseAttrInfo> attrInfoList(String catalog3Id) {
-        PmsBaseAttrInfo info = new PmsBaseAttrInfo ();
-        info.setCatalog3Id (catalog3Id);
-        List<PmsBaseAttrInfo> infoList = infoMapper.select (info);
-        return infoList;
-    }
+    @Autowired
+    PmsBaseSaleAttrMapper baseSaleAttrMapper;
 
-    @Override
-    public String saveAttrInfo(PmsBaseAttrInfo pmsBaseAttrInfo) {
-        int insert = infoMapper.insert (pmsBaseAttrInfo);
-        List<PmsBaseAttrValue> values = pmsBaseAttrInfo.getAttrValueList ();
-        for (PmsBaseAttrValue e : values) {
-            valueMapper.insert (e);
-        }
-        return "true";
-    }
+    @Autowired
+    PmsProductSaleAttrMapper productSaleAttrMapper;
 
     @Override
     public List<PmsBaseAttrValue> getAttrValueList(String attrId) {
@@ -53,6 +46,63 @@ public class AttrServiceImpl implements AttrService {
 
     @Override
     public List<PmsBaseSaleAttr> baseSaleAttrList() {
-        return null;
+
+        List<PmsBaseSaleAttr> baseSaleAttrs = baseSaleAttrMapper.selectAll ();
+        return baseSaleAttrs;
     }
+
+    @Override
+    public List<PmsProductSaleAttr> spuSaleAttrList(String spuId) {
+        PmsProductSaleAttr pmsProductSaleAttr = new PmsProductSaleAttr ();
+        pmsProductSaleAttr.setId (spuId);
+        List<PmsProductSaleAttr> attrList = productSaleAttrMapper.select (pmsProductSaleAttr);
+        return attrList;
+    }
+
+    @Override
+    public List<PmsBaseAttrInfo> attrInfoList(String catalog3Id) {
+        PmsBaseAttrInfo info = new PmsBaseAttrInfo ();
+        info.setCatalog3Id (catalog3Id);
+        List<PmsBaseAttrInfo> infoList = infoMapper.select (info);
+        return infoList;
+    }
+
+    // 保存和修改属性
+    @Override
+    public String saveAttrInfo(PmsBaseAttrInfo pmsBaseAttrInfo) {
+
+        if (StringUtils.isBlank (pmsBaseAttrInfo.getId ())) {
+
+            int insert = infoMapper.insertSelective (pmsBaseAttrInfo);
+            List<PmsBaseAttrValue> values = pmsBaseAttrInfo.getAttrValueList ();
+            for (PmsBaseAttrValue e : values) {
+                e.setAttrId (pmsBaseAttrInfo.getId ());
+                valueMapper.insertSelective (e);
+            }
+        } else {
+            // id 非空，修改
+
+            // 属性
+            Example e = new Example (PmsBaseAttrInfo.class);
+            e.createCriteria ().andEqualTo ("id", pmsBaseAttrInfo.getId ());
+            infoMapper.updateByExampleSelective (pmsBaseAttrInfo, e);
+
+            // 属性值
+            List<PmsBaseAttrValue> values = pmsBaseAttrInfo.getAttrValueList ();
+
+            // 根据属性id，删除所有该属性id的属性值
+            PmsBaseAttrValue value = new PmsBaseAttrValue ();
+            value.setAttrId (pmsBaseAttrInfo.getId ());
+            valueMapper.delete (value);
+
+            // 再将新的属性值插入
+            for (PmsBaseAttrValue ele : values) {
+                ele.setAttrId (pmsBaseAttrInfo.getId ());
+                valueMapper.insertSelective (ele);
+            }
+        }
+        return "success";
+    }
+
+
 }

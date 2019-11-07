@@ -4,6 +4,7 @@ package com.warush.btmall.service;
 import com.warush.btmall.beans.PmsBaseAttrInfo;
 import com.warush.btmall.beans.PmsBaseAttrValue;
 import com.warush.btmall.beans.PmsBaseSaleAttr;
+import com.warush.btmall.beans.PmsProductSaleAttr;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface AttrService {
     List<PmsBaseAttrValue> getAttrValueList(String attrId);
 
     List<PmsBaseSaleAttr> baseSaleAttrList();
+    List<PmsProductSaleAttr> spuSaleAttrList(String spuId);
+
 }
