@@ -1,14 +1,8 @@
 package com.warush.btmall.manage.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.warush.btmall.beans.PmsBaseAttrInfo;
-import com.warush.btmall.beans.PmsBaseAttrValue;
-import com.warush.btmall.beans.PmsBaseSaleAttr;
-import com.warush.btmall.beans.PmsProductSaleAttr;
-import com.warush.btmall.manage.mapper.PmsBaseAttrInfoMapper;
-import com.warush.btmall.manage.mapper.PmsBaseAttrValueMapper;
-import com.warush.btmall.manage.mapper.PmsBaseSaleAttrMapper;
-import com.warush.btmall.manage.mapper.PmsProductSaleAttrMapper;
+import com.warush.btmall.beans.*;
+import com.warush.btmall.manage.mapper.*;
 import com.warush.btmall.service.AttrService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +29,15 @@ public class AttrServiceImpl implements AttrService {
     @Autowired
     PmsProductSaleAttrMapper productSaleAttrMapper;
 
+    @Autowired
+    PmsBaseAttrInfoMapper pmsBaseAttrInfoMapper;
+
+    @Autowired
+    PmsBaseAttrValueMapper pmsBaseAttrValueMapper;
+
+    @Autowired
+    PmsProductSaleAttrValueMapper pmsProductSaleAttrValueMapper;
+
     @Override
     public List<PmsBaseAttrValue> getAttrValueList(String attrId) {
         PmsBaseAttrValue value = new PmsBaseAttrValue ();
@@ -56,6 +59,14 @@ public class AttrServiceImpl implements AttrService {
         PmsProductSaleAttr pmsProductSaleAttr = new PmsProductSaleAttr ();
         pmsProductSaleAttr.setId (spuId);
         List<PmsProductSaleAttr> attrList = productSaleAttrMapper.select (pmsProductSaleAttr);
+        for (PmsProductSaleAttr saleAttr : attrList) {
+            PmsProductSaleAttrValue saleAttrValue = new PmsProductSaleAttrValue ();
+            saleAttrValue.setProductId (spuId);
+            saleAttrValue.setSaleAttrId (saleAttr.getSaleAttrId ());
+
+            List<PmsProductSaleAttrValue> attrValues = pmsProductSaleAttrValueMapper.select (saleAttrValue);
+            saleAttr.setSpuSaleAttrValueList (attrValues);
+        }
         return attrList;
     }
 
@@ -64,6 +75,11 @@ public class AttrServiceImpl implements AttrService {
         PmsBaseAttrInfo info = new PmsBaseAttrInfo ();
         info.setCatalog3Id (catalog3Id);
         List<PmsBaseAttrInfo> infoList = infoMapper.select (info);
+        for (PmsBaseAttrInfo baseAttrInfo : infoList) {
+            PmsBaseAttrValue attrValue = new PmsBaseAttrValue ();
+            attrValue.setAttrId (baseAttrInfo.getId ());
+            baseAttrInfo.setAttrValueList (pmsBaseAttrValueMapper.select (attrValue));
+        }
         return infoList;
     }
 
