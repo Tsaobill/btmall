@@ -3,11 +3,12 @@ package com.warush.btmall.manage.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.warush.btmall.beans.PmsProductImage;
 import com.warush.btmall.beans.PmsProductInfo;
+import com.warush.btmall.beans.PmsProductSaleAttr;
 import com.warush.btmall.manage.mapper.PmsProductImageMapper;
 import com.warush.btmall.manage.mapper.PmsProductInfoMapper;
+import com.warush.btmall.manage.mapper.PmsProductSaleAttrMapper;
 import com.warush.btmall.service.SpuService;
 import org.springframework.beans.factory.annotation.Autowired;
-import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class SpuServiceImpl implements SpuService {
     @Autowired
     PmsProductImageMapper pmsProductImageMapper;
 
+    @Autowired
+    PmsProductSaleAttrMapper pmsProductSaleAttrMapper;
 
     @Override
     public List<PmsProductInfo> spuList(String catalog3Id) {
@@ -35,9 +38,15 @@ public class SpuServiceImpl implements SpuService {
 
     @Override
     public String saveSpuInfo(PmsProductInfo pmsProductInfo) {
-        Example e = new Example (PmsProductInfo.class);
-        e.createCriteria ().andEqualTo ("id", pmsProductInfo.getId ());
-        int i = pmsProductInfoMapper.updateByExampleSelective (pmsProductInfo, e);
+        int i = pmsProductInfoMapper.insert (pmsProductInfo);
+        List<PmsProductSaleAttr> spuSaleAttrList = pmsProductInfo.getSpuSaleAttrList ();
+        for (PmsProductSaleAttr saleAttr : spuSaleAttrList) {
+            pmsProductSaleAttrMapper.insertSelective (saleAttr);
+        }
+        List<PmsProductImage> spuImageList = pmsProductInfo.getSpuImageList ();
+        for (PmsProductImage productImage : spuImageList) {
+            pmsProductImageMapper.insertSelective (productImage);
+        }
         return i + "";
     }
 

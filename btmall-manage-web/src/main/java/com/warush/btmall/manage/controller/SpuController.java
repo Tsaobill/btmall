@@ -5,6 +5,7 @@ import com.warush.btmall.beans.PmsBaseSaleAttr;
 import com.warush.btmall.beans.PmsProductImage;
 import com.warush.btmall.beans.PmsProductInfo;
 import com.warush.btmall.beans.PmsProductSaleAttr;
+import com.warush.btmall.manage.util.PmsUploadUtil;
 import com.warush.btmall.service.AttrService;
 import com.warush.btmall.service.SpuService;
 import org.springframework.stereotype.Controller;
@@ -33,17 +34,19 @@ public class SpuController {
     public String fileUpload(@RequestParam("file") MultipartFile multipartFile) {
         // 将图片上传到分布式文件存储系统
         // 链接FastDFS
-
-
         //  将存储的地址返回给前端
-        String imgUrl = "http://asdfasdfa";
+        String imgUrl = "";
+        try {
+            imgUrl = PmsUploadUtil.uploadImage (multipartFile);
+        } catch (Exception e) {
+        }
         return imgUrl;
     }
 
     @RequestMapping("saveSpuInfo")
     @ResponseBody
     public String saveSpuInfo(@RequestBody PmsProductInfo productInfo) {
-        //String res = spuService.saveSpuInfo (productInfo);
+        String res = spuService.saveSpuInfo (productInfo);
         return "";
     }
 
