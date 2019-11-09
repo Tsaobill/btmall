@@ -57,7 +57,7 @@ public class AttrServiceImpl implements AttrService {
     @Override
     public List<PmsProductSaleAttr> spuSaleAttrList(String spuId) {
         PmsProductSaleAttr pmsProductSaleAttr = new PmsProductSaleAttr ();
-        pmsProductSaleAttr.setId (spuId);
+        pmsProductSaleAttr.setProductId (spuId);
         List<PmsProductSaleAttr> attrList = productSaleAttrMapper.select (pmsProductSaleAttr);
         for (PmsProductSaleAttr saleAttr : attrList) {
             PmsProductSaleAttrValue saleAttrValue = new PmsProductSaleAttrValue ();

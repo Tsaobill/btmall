@@ -21,6 +21,7 @@ import java.util.List;
  **/
 @Service
 public class SpuServiceImpl implements SpuService {
+
     @Autowired
     PmsProductInfoMapper pmsProductInfoMapper;
 
@@ -31,7 +32,27 @@ public class SpuServiceImpl implements SpuService {
     PmsProductSaleAttrMapper pmsProductSaleAttrMapper;
 
     @Autowired
-    PmsProductSaleAttrValueMapper saleAttrValueMapper;
+    PmsProductSaleAttrValueMapper pmsProductSaleAttrValueMapper;
+
+
+    @Override
+    public List<PmsProductSaleAttr> spuSaleAttrListCheckBySku(String productId, String skuId) {
+//        PmsProductSaleAttr pmsProductSaleAttr = new PmsProductSaleAttr ();
+//        pmsProductSaleAttr.setProductId (productId);
+//        List<PmsProductSaleAttr> pmsProductSaleAttrs = pmsProductSaleAttrMapper.select (pmsProductSaleAttr);
+//        for (PmsProductSaleAttr saleAttr : pmsProductSaleAttrs) {
+//            String saleAttrId = saleAttr.getSaleAttrId ();
+//            PmsProductSaleAttrValue saleAttrValue = new PmsProductSaleAttrValue ();
+//            saleAttrValue.setSaleAttrId (saleAttrId);
+//            saleAttrValue.setProductId (productId);
+//            List<PmsProductSaleAttrValue> saleAttrValues = pmsProductSaleAttrValueMapper.select (saleAttrValue);
+//            saleAttr.setSpuSaleAttrValueList (saleAttrValues);
+//        }
+
+        List<PmsProductSaleAttr> pmsProductSaleAttrs = pmsProductSaleAttrMapper.selectSpuSaleAttrListCheckBySku (productId, skuId);
+
+        return pmsProductSaleAttrs;
+    }
 
     @Override
     public List<PmsProductInfo> spuList(String catalog3Id) {
@@ -44,7 +65,7 @@ public class SpuServiceImpl implements SpuService {
     @Override
     public String saveSpuInfo(PmsProductInfo pmsProductInfo) {
         // 保存商品信息
-        pmsProductInfoMapper.insert (pmsProductInfo);
+        pmsProductInfoMapper.insertSelective (pmsProductInfo);
 
         // 获取商品主键信息
         String productId = pmsProductInfo.getId ();
@@ -61,14 +82,13 @@ public class SpuServiceImpl implements SpuService {
         for (PmsProductSaleAttr saleAttr : spuSaleAttrList) {
             saleAttr.setProductId (productId);
             pmsProductSaleAttrMapper.insertSelective (saleAttr);
-            String atrrId = saleAttr.getSaleAttrId ();
+
 
             // 保存销售属性值
             List<PmsProductSaleAttrValue> attrValueList = saleAttr.getSpuSaleAttrValueList ();
             for (PmsProductSaleAttrValue saleAttrValue : attrValueList) {
                 saleAttrValue.setProductId (productId);
-                saleAttrValue.setSaleAttrId (atrrId);
-                saleAttrValueMapper.insertSelective (saleAttrValue);
+                pmsProductSaleAttrValueMapper.insertSelective (saleAttrValue);
             }
         }
 
