@@ -1,4 +1,4 @@
-package com.warush.btmall.manage;
+package com.warush.btmall;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
