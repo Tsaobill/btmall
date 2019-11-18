@@ -16,3 +16,8 @@ btmall-manage-web的服务端口为8081
     这一部分实际上是调用manage-service的服务
     这里就体现出SOA的特性，
 ####btmall-item-web 前台系统的商品详情展示 8082
+
+
+###搜索服务
+btmall-manage-service的端口为8074
+btmall-manage-web的端口为8083

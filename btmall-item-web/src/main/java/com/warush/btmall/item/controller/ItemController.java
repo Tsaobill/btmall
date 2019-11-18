@@ -21,7 +21,6 @@ import java.util.List;
  * @on 2019-11-08 23:34
  **/
 @Controller
-//@CrossOrigin
 public class ItemController {
 
     @Reference

@@ -7,6 +7,7 @@ import com.warush.btmall.beans.PmsBaseSaleAttr;
 import com.warush.btmall.beans.PmsProductSaleAttr;
 
 import java.util.List;
+import java.util.Set;
 
 
 public interface AttrService {
@@ -16,6 +17,7 @@ public interface AttrService {
     String saveAttrInfo(PmsBaseAttrInfo pmsBaseAttrInfo);
 
     List<PmsBaseAttrValue> getAttrValueList(String attrId);
+    List<PmsBaseAttrInfo> getAttrValueListBuValueId(Set<String> valueIdSet);
 
     List<PmsBaseSaleAttr> baseSaleAttrList();
     List<PmsProductSaleAttr> spuSaleAttrList(String spuId);
