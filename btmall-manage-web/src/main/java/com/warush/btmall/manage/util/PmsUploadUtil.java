@@ -30,7 +30,7 @@ public class PmsUploadUtil {
         byte[] bytes = multipartFile.getBytes ();
         String filename = multipartFile.getOriginalFilename ();
         String[] uploadInfos = storageClient.upload_file (bytes, filename.substring (filename.lastIndexOf (".") + 1), null);
-        String url = "http://172.16.66.132";
+        String url = "http://172.16.66.133";
         for (String info : uploadInfos) {
             url += "/" + info;
         }
