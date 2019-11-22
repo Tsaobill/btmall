@@ -2,6 +2,7 @@ package com.warush.btmall.cart.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
+import com.warush.btmall.annotations.LoginRequired;
 import com.warush.btmall.beans.OmsCartItem;
 import com.warush.btmall.beans.PmsSkuInfo;
 import com.warush.btmall.service.CartService;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,9 +36,23 @@ public class CartController {
     @Reference
     CartService cartService;
 
+
+
+    @RequestMapping("toTrade")
+    @LoginRequired(loginSuccess = false)
+    public String cartList(ModelMap modelMap, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        String memberId =(String) request.getAttribute ("memberId");
+        String nickname =(String) request.getAttribute ("nickname");
+
+        return "trade";
+    }
+
+
+
     @RequestMapping("checkCartaaaaa")
-    public String checkCart(String isChecked, String skuId,ModelMap modelMap){
-        String memberId ="1";
+    public String checkCart(String isChecked, String skuId,ModelMap modelMap,HttpServletRequest request){
+        String memberId =(String) request.getAttribute ("memberId");
+        String nickname =(String) request.getAttribute ("nickname");
         //调用服务，修改状态
         OmsCartItem omsCartItem = new OmsCartItem ();
         omsCartItem.setMemberId (memberId);
@@ -53,12 +69,14 @@ public class CartController {
     }
 
     @RequestMapping("cartList")
+    @LoginRequired(loginSuccess = false)
     public String cartList(ModelMap modelMap, HttpServletRequest request) {
         List<OmsCartItem> omsCartItems = new ArrayList<> ();
-        String userId = "1";
-        if (StringUtils.isNotBlank (userId)) {
+        String memberId = (String) request.getAttribute ("memberId");
+        String nickname = (String) request.getAttribute ("nickname");
+        if (StringUtils.isNotBlank (memberId)) {
             // 已经登录查询db
-            omsCartItems = cartService.cartList (userId);
+            omsCartItems = cartService.cartList (memberId);
         } else {
             // 未登录查询cookie
             String cartListCookie = CookieUtil.getCookieValue (request, "cartListCookie", true);
@@ -89,6 +107,7 @@ public class CartController {
     }
 
     @RequestMapping("addToCart")
+    @LoginRequired(loginSuccess = false)
     public String addToCart(String skuId, int quantity, HttpServletRequest request, HttpServletResponse response) {
 
         // 1.根据skuid查询商品信息
@@ -113,7 +132,8 @@ public class CartController {
         List<OmsCartItem> omsCartItems = new ArrayList<> ();
 
         // 3.判断用户登录状态
-        String memberId = "1";//
+        String memberId = (String) request.getAttribute ("memberId");
+        String nickname = (String) request.getAttribute ("nickname");
         if (StringUtils.isBlank (memberId)) {
             // 未登录
             // 4.1 cookie 同步购物车信息
@@ -177,6 +197,7 @@ public class CartController {
     }
 
     @RequestMapping("addToCarta")
+    @LoginRequired(loginSuccess = false)
     public ModelAndView a() {
 
         return new ModelAndView ("success");

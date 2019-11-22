@@ -1,6 +1,7 @@
 package com.warush.btmall.search.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.warush.btmall.annotations.LoginRequired;
 import com.warush.btmall.beans.*;
 import com.warush.btmall.service.AttrService;
 import com.warush.btmall.service.SearchService;
@@ -127,6 +128,7 @@ public class SearchController {
     }
 
     @RequestMapping("index")
+    @LoginRequired(loginSuccess = false)
     public String index() {
 
         return "index";

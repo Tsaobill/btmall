@@ -24,3 +24,10 @@
 ###购物车服务
 - btmall-cart-service的端口为8074
 - btmall-cart-web的端口为8084
+
+###用户认证服务
+- btmall-user-service的服务端口为8070
+- btmall-passport-web的端口为8085
+
+###订单服务
+- btmall-order-web的端口为8086

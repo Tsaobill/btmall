@@ -11,4 +11,8 @@ public interface UserService {
 
     List<UmsMemberReceiveAddress> getReceiveAddressByMemberId(String memberId);
     UmsMember getMemberById(String id);
+
+    UmsMember login(UmsMember umsMember);
+
+    void addUserToken(String token, String memberId);
 }

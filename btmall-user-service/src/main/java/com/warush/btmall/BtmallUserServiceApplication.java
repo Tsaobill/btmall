@@ -1,4 +1,4 @@
-package com.warush.btmall.user;
+package com.warush.btmall;
 
 import tk.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

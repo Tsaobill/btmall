@@ -18,21 +18,19 @@ import java.util.List;
  * @on 2019-11-03 19:10
  **/
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl {
     @Autowired
     UserMapper userMapper;
 
     @Autowired
     UmsMemberReceiveAddressMapper umsMemberReceiveAddressMapper;
 
-    @Override
     public List<UmsMember> getAllUser() {
         List<UmsMember> umsMembers = userMapper.selectAll ();
         return umsMembers;
     }
 
 
-    @Override
     public List<UmsMemberReceiveAddress> getReceiveAddressByMemberId(String umsMemberId) {
         Example e = new Example (UmsMemberReceiveAddress.class);
         e.createCriteria ().andEqualTo ("memberId", umsMemberId);
@@ -40,7 +38,6 @@ public class UserServiceImpl implements UserService {
         return umsMemberReceiveAddresses;
     }
 
-    @Override
     public UmsMember getMemberById(String id) {
         Example e = new Example (UmsMember.class);
         e.createCriteria ().andEqualTo ("id", id);
