@@ -16,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,28 +36,16 @@ public class CartController {
     CartService cartService;
 
 
-
-    @RequestMapping("toTrade")
-    @LoginRequired(loginSuccess = false)
-    public String cartList(ModelMap modelMap, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        String memberId =(String) request.getAttribute ("memberId");
-        String nickname =(String) request.getAttribute ("nickname");
-
-        return "trade";
-    }
-
-
-
     @RequestMapping("checkCartaaaaa")
-    public String checkCart(String isChecked, String skuId,ModelMap modelMap,HttpServletRequest request){
-        String memberId =(String) request.getAttribute ("memberId");
-        String nickname =(String) request.getAttribute ("nickname");
+    public String checkCart(String isChecked, String skuId, ModelMap modelMap, HttpServletRequest request) {
+        String memberId = (String) request.getAttribute ("memberId");
+        String nickname = (String) request.getAttribute ("nickname");
         //调用服务，修改状态
         OmsCartItem omsCartItem = new OmsCartItem ();
         omsCartItem.setMemberId (memberId);
         omsCartItem.setIsChecked (isChecked);
         omsCartItem.setProductSkuId (skuId);
-        cartService.checkCart(omsCartItem);
+        cartService.checkCart (omsCartItem);
 
 
         // 将最新数据从缓存中取出，渲染给内嵌页面
@@ -72,8 +59,9 @@ public class CartController {
     @LoginRequired(loginSuccess = false)
     public String cartList(ModelMap modelMap, HttpServletRequest request) {
         List<OmsCartItem> omsCartItems = new ArrayList<> ();
-        String memberId = (String) request.getAttribute ("memberId");
-        String nickname = (String) request.getAttribute ("nickname");
+//        String memberId = (String) request.getAttribute ("memberId");
+//        String nickname = (String) request.getAttribute ("nickname");
+        String memberId = "1";
         if (StringUtils.isNotBlank (memberId)) {
             // 已经登录查询db
             omsCartItems = cartService.cartList (memberId);
@@ -99,7 +87,7 @@ public class CartController {
     private BigDecimal getCheckedTotalPrice(List<OmsCartItem> omsCartItems) {
         BigDecimal res = new BigDecimal ("0");
         for (OmsCartItem cartItem : omsCartItems) {
-            if(cartItem.getIsChecked ().equals ("1")){
+            if (cartItem.getIsChecked ().equals ("1")) {
                 res.add (cartItem.getTotalPrice ());
             }
         }
@@ -132,8 +120,9 @@ public class CartController {
         List<OmsCartItem> omsCartItems = new ArrayList<> ();
 
         // 3.判断用户登录状态
-        String memberId = (String) request.getAttribute ("memberId");
-        String nickname = (String) request.getAttribute ("nickname");
+//        String memberId = (String) request.getAttribute ("memberId");
+//        String nickname = (String) request.getAttribute ("nickname");
+        String memberId = "1";
         if (StringUtils.isBlank (memberId)) {
             // 未登录
             // 4.1 cookie 同步购物车信息

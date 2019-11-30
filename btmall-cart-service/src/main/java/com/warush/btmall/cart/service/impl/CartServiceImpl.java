@@ -39,20 +39,24 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<OmsCartItem> cartList(String userId) {
+    public List<OmsCartItem> cartList(String memberId) {
         Jedis jedis = null;
         List<OmsCartItem> omsCartItems = new ArrayList<> ();
         try {
 
             jedis = redisUtil.getJedis ();
-            String key = "user:" + userId + ":cart";
+            String key = "user:" + memberId + ":cart";
             List<String> hvals = jedis.hvals (key);
             // 如果hvals != null，缓存中有数据
-            for (String hval : hvals) {
-                omsCartItems.add (JSON.parseObject (hval, OmsCartItem.class));
+            if (hvals.size () > 0) {
+                for (String hval : hvals) {
+                    omsCartItems.add (JSON.parseObject (hval, OmsCartItem.class));
+                }
+            } else {
+                // 否则去db中查询
+                synCartCache (memberId);
+                return cartList (memberId);
             }
-            // 否则去db中查询
-
         } catch (Exception e) {
             e.printStackTrace ();
         } finally {

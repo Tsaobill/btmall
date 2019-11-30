@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,6 +44,16 @@ public class SkuServiceImpl implements SkuService {
     @Autowired
     RedisUtil redisUtil;
 
+    @Override
+    public boolean checkPrice(String productSkuId, BigDecimal price) {
+        boolean res = false;
+        PmsSkuInfo pmsSkuInfo = new PmsSkuInfo ();
+        pmsSkuInfo.setId (productSkuId);
+        PmsSkuInfo skuInfoInDb = skuInfoMapper.selectOne (pmsSkuInfo);
+        res = skuInfoInDb.getPrice ().compareTo (price) == 0;
+
+        return res;
+    }
 
     @Override
     public List<PmsSkuInfo> getAllSku(String catalog3Id) {

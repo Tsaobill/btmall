@@ -38,6 +38,13 @@ public class UserServiceImpl implements UserService {
         return umsMembers;
     }
 
+    @Override
+    public UmsMemberReceiveAddress getReceiveAddressById(String receiveAddressId) {
+        UmsMemberReceiveAddress ad = new UmsMemberReceiveAddress ();
+        ad.setId (receiveAddressId);
+        UmsMemberReceiveAddress receiveAddress = umsMemberReceiveAddressMapper.selectOne (ad);
+        return receiveAddress;
+    }
 
     @Override
     public List<UmsMemberReceiveAddress> getReceiveAddressByMemberId(String umsMemberId) {

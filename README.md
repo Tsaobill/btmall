@@ -31,3 +31,8 @@
 
 ###订单服务
 - btmall-order-web的端口为8086
+- btmall-order-service的端口为8076
+
+
+###支付服务
+- btmall-payment的端口为8087
